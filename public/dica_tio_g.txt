@@ -1,0 +1,25 @@
+Resolver o minimo
+Adivinhar o prato que a pessoa está pensando.
+
+O caminho para chegar no resultado é apresentando as categorias e sub-caterias até conseguir
+chegar em um item que não tem filho.
+
+
+
+
+
+
+
+-> Massa
+        --> Lazanha
+                    --> OK
+
+-> Massa
+        --> Lazanha
+        --> ----
+        n
+                    --> OK
+
+
+
+
