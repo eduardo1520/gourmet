@@ -9,9 +9,8 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post" action="{{ route('category.store') }}">
+    <form method="get" action="{{ route('category.show',$category->id) }}">
         <p>{{ $titulo }}</p>
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input name="category" type="hidden" value="{{$category->id}}">
         <button value="1" name="answer">Sim</button>
         <button value="0" name="answer">Não</button>

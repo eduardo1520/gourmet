@@ -14,11 +14,17 @@ class Plate extends Model
 
     protected $table = 'plates';
 
-    public function getPlateByCategoryID(int $id): object
+    public function getPlateByCategoryID(int $id, $plate): object
     {
+        $countPlates = $this->getCountPlateByCategoryID($id);
         $listPlates = Plate::select('plates.id', 'plates.name','category_id')
         ->where('plates.category_id', $id)->get();
-        return count($listPlates) == 1 ? $listPlates[0] : $listPlates;
+        return $countPlates == 1 ? $this->getOnePlateCategoryID($id, $plate) : $listPlates;
+    }
+
+    public function getOnePlateCategoryID(int$id): object
+    {
+        return Plate::select('plates.id', 'plates.name','category_id')->where('plates.category_id', $id)->first();
     }
 
     public function getCategoryByPlateID($plate): object
@@ -40,12 +46,12 @@ class Plate extends Model
      * O retorno desse método precisa ser um array devido a regra de negócio aplicada no retorno das informações.
      *
      */
-    public function getPlatesByCategoryNotIn(int $category, array $plate): array
+    public function getPlatesByCategoryNotIn(int $category, array $plate): object
     {
         $encontrou = Plate::where('category_id', $category)->whereNotIn('id',$plate)->exists();
         if($encontrou == true)
-            return (Plate::where('category_id', $category)->whereNotIn('id',$plate)->get()->toArray())[0];
-        return [];
+            return (Plate::where('category_id', $category)->whereNotIn('id',$plate)->get());
+        return (Plate::where('category_id', $category)->where('id',$plate)->get());
     }
 
     public function getPlates()
@@ -61,37 +67,17 @@ class Plate extends Model
 
     public function getCountPlateByCategoryID(int $id): int
     {
-        return count($this->getPlateByCategoryID($id));
+        return Plate::select('plates.id', 'plates.name','category_id')->where('plates.category_id', $id)->count();
     }
 
-    public function getOnePlatyCategoryID(int $category, int $plate): object
+    public function getTypePlateByCategoryID(int $category, int $plate): object
     {
-        return Plate::where('category_id',$category)->where('id',$plate)->get();
-    }
-
-    public function getTypePlateByCategoryID(int $plate, int $category): array
-    {
-
-
-        $plate = (Plate::select('plates.id', 'plates.name','plates.category_id')->where('plates.id', $plate)->get())[0];
-
-        $category = Category::select('categories.id','categories.name')->where('categories.id_pai',$category)->groupby('categories.id')->get();
-        dd([$plate, $category]);
-
-        $dado = [];
-        foreach ($category as $idx => $c) {
-            if((int)$plate->id === (int)$c->id) {
-                $dado = [
-                    'name' => $c->name,
-                    'id' => $plate->id,
-                    'category_id' => $c->id,
-                    'plate' => $plate->name
-                ];
-                break;
-            }
-        }
-
-        return $dado;
+        return collect(\DB::table('plates As p')
+            ->select('p.name As plate','c.id','c.name As category')
+            ->join('categories As c','c.id','=','p.category_id')
+            ->where('p.id',$plate)
+            ->where('c.id',$category)
+            ->get());
     }
 
     public function getNextPlateByCategoryID(int $category): object

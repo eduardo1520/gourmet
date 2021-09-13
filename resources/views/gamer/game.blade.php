@@ -12,6 +12,7 @@
     <form method="get" action="{{ route('plate.show',['id'=>$ct->id]) }}">
 
         <p>O prato que você pensou é {{ $ct->name }}?</p>
+        <input type="hidden" name="category" value="{{$ct->id}}">
         <button value="1" name="answer">Sim</button>
         <button value="0" name="answer">Não</button>
     </form>

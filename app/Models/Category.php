@@ -14,10 +14,6 @@ class Category extends Model
     protected  $hidden = ['created_at', 'update_at'];
     protected $table = 'categories';
 
-    public function getCategoryByID(int $id): object
-    {
-        return Category::where('id', $id)->get();
-    }
 
     public function getFirstCategory()
     {
@@ -42,6 +38,15 @@ class Category extends Model
         } catch(\Exception $exception) {
             die($exception->getMessage());
         }
+    }
+
+    public function getCategoryNotIn(array $categories): object
+    {
+        $encontrou = Category::whereNotIn('id_pai',$categories)->exists();
+
+        if($encontrou == true)
+            return collect(Category::whereNotIn('id', $categories)->whereNotIn('id_pai',$categories)->get());
+        return collect(Category::where('id', $categories)->whereNotIn('id',$categories)->get());
     }
 
 }

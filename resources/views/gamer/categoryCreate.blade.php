@@ -11,6 +11,7 @@
 <body>
 <form method="post" action="{{ route('category.store') }}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="category" value="{{ $category->id }}">
     <p>{{$titulo}}</p>
     <input name="name" type="text" />
     <button value="1" name="answer">{{$btn}}</button>

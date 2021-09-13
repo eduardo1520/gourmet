@@ -12,6 +12,7 @@
 <form method="get" action="{{ route('plate.create') }}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="hidden" name="category" value="{{ $category['id'] }}">
+    <input type="hidden" name="plate" value="{{ $category['plate'] }}">
     <p>{{ $titulo }}</p>
     <input name="name" type="text" />
     <button value="1" name="answer">{{ $btn }}</button>

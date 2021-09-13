@@ -26,10 +26,12 @@ Route::get('/',[GameGourmetController::class, 'index'])->name('home');
 Route::get('/start', [StartController::class, 'index'])->name('start');
 //Route::get('/category', [CategoryController::class, 'index'])->name('category');
 
-Route::resource('/category', CategoryController::class)->names([
-   'index',
-    'store',
-]);
+Route::get('/category/{id}', [CategoryController::class,'show'])->name('category.show');
+
+//Route::resource('/category', CategoryController::class)->names([
+//   'index',
+//    'store',
+//]);
 
 Route::get('/plate/category/{id}', [PlateController::class,'show'])->name('plate.show');
 Route::get('/plate/{id}/edit', [PlateController::class,'edit'])->name('plate.edit');
